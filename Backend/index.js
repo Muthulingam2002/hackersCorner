@@ -4,14 +4,18 @@ const axios = require("axios");
 const pool = require("./db");
 const userRoutes = require("./routes/userRoutes.js");
 const oppRoutes = require("./routes/oppurtunityRoutes.js");
+const postRoutes = require("./routes/postRoutes");
+const detailsRoutes=require("./routes/detailsRoutes")
+
 const app = express();
-console.log("exp", typeof express);
-console.log("app", typeof app);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 app.use("/opportunities", oppRoutes);
+app.use("/details", detailsRoutes);
 
 app.get("/", async (req, res) => {
     const data = await pool.query("select * from users");
@@ -19,9 +23,11 @@ app.get("/", async (req, res) => {
     res.json(data.rows);
 });
 
-
-app.get("/leetcode", async (req, res) => {
-    const response = await fetch("https://leetcode.com/graphql/", {
+app.get("/leetcode/:user", async (req, res) => {
+    console.log("leetcode");
+    const { user } = req.params;
+    try {
+        const response = await fetch("https://leetcode.com/graphql/", {
         credentials: "include",
         headers: {
             "User-Agent":
@@ -41,31 +47,21 @@ app.get("/leetcode", async (req, res) => {
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin",
         },
-        referrer: "https://leetcode.com/Muthulingam/",
-        body: '{"query":"\\n    query userProblemsSolved($username: String!) {\\n  allQuestionsCount {\\n    difficulty\\n    count\\n  }\\n  matchedUser(username: $username) {\\n    problemsSolvedBeatsStats {\\n      difficulty\\n      percentage\\n    }\\n    submitStatsGlobal {\\n      acSubmissionNum {\\n        difficulty\\n        count\\n      }\\n    }\\n  }\\n}\\n    ","variables":{"username":"Muthulingam"}}',
+        referrer: `https://leetcode.com/${user}/`,
+        body: `{"query":"\\n    query userProblemsSolved($username: String!) {\\n  allQuestionsCount {\\n    difficulty\\n    count\\n  }\\n  matchedUser(username: $username) {\\n    problemsSolvedBeatsStats {\\n      difficulty\\n      percentage\\n    }\\n    submitStatsGlobal {\\n      acSubmissionNum {\\n        difficulty\\n        count\\n      }\\n    }\\n  }\\n}\\n    ","variables":{"username":"${user}"}}`,
         method: "POST",
         mode: "cors",
     });
     const data = await response.json();
-    res.json(data.submitStatsGlobal);
-});
-
-app.get("/hackathons", async (req, res) => {
-    try {
-        const response = await axios.get("https://devpost.com/api/hackathons");
-        res.json(response.data);
+    console.log(data.data.matchedUser.submitStatsGlobal.acSubmissionNum);
+    const submissionDetail = {
+        total:data.data.allQuestionsCount,
+        userCount: data.data.matchedUser.submitStatsGlobal.acSubmissionNum
+    };
+    res.json(submissionDetail);
     } catch (err) {
-        res.send(err);
-    }
-});
-
-app.get("/add/:name", async (req, res) => {
-    const { name } = req.params;
-    const data = await pool.query(
-        "insert into profile (name,age) values ($1,$2) returning *",
-        [name, 20]
-    );
-    res.send(data.rows);
+        res.status(404).json("user not found")
+}
 });
 
 app.listen(5000, (req, res) => {

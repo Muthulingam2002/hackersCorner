@@ -39,7 +39,7 @@ const Jobs = () => {
             ) : (
                 <div>
                     <div className="ml-[12%]">
-                        <Filter />
+                        {/* <Filter /> */}
                     </div>
                     <div className="space-y-6 w-[50%] mx-auto ">
                         {jobs.map((job) => {

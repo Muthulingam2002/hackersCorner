@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import Logo from "../assests/malware.png";
-import {
-    PlusCircleIcon,
-    PaperAirplaneIcon
-} from "@heroicons/react/solid";
+import { PlusCircleIcon, PaperAirplaneIcon } from "@heroicons/react/solid";
 import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
+import { useSelector } from "react-redux";
 import { Cloudinary } from "cloudinary-core";
 import axios from "axios";
 
@@ -14,6 +12,8 @@ const InputBox = () => {
     let [File, setFile] = useState(null);
     let [uploadfile, setUploadFile] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
+    const { user } = useSelector((state) => state.users);
+    console.log("ueser",user)
 
     const cl = new Cloudinary({
         cloud_name: "dqalbizzj",
@@ -31,11 +31,30 @@ const InputBox = () => {
             );
             console.log(response.data);
             setImageUrl(response.data.secure_url);
-            alert(imageUrl);
         } catch (error) {
             console.error("Error:", error);
         }
     };
+    useEffect(() => {
+        console.log("uploading....");
+        const upload = async () => {
+            if (imageUrl) {
+                const res = await axios.post(
+                    "http://localhost:5000/posts/addPost",
+                    {
+                        user_id: user.id,
+                        name: user.name,
+                        avatar: user.avatar,
+                        image: imageUrl,
+                        caption: Text,
+                    }
+                );
+                RemoveImage();
+                setText("");
+            }
+        };
+        upload();
+    }, [imageUrl]);
 
     const addImageToPost = (e) => {
         const reader = new FileReader();
@@ -55,14 +74,14 @@ const InputBox = () => {
 
     return (
         <>
-            <div className="flex flex-col bg-[#081c3d] p-2 rounded-md space-y-3">
+            <div className="flex flex-col bg-[#081c3d] w-[50%] mx-auto p-2 rounded-md space-y-3">
                 <div className="flex w-[full] justify-between ">
                     <img
                         className="h-8 w-8 bg-blue-200 rounded-full p-1"
-                        src={Logo}
+                        src={user.avatar}
                     />
                     <div class="text-xs mr-2 py-1.5 px-4 text-gray-600 bg-blue-200 rounded-2xl">
-                        Money
+                        {user.username}
                     </div>
                 </div>
                 <div className="Top text-xs flex items-center bg-[#1f2937] space-x-2">

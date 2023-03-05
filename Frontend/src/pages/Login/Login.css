@@ -1,4 +1,4 @@
-body {
+.loginPage body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -66,7 +66,7 @@ body {
   transform: rotate(25deg);
 }
 
-form {
+.loginPage form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -79,27 +79,27 @@ form {
   box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
   padding: 10px 10px;
 }
-form * {
+.loginPage form * {
   font-family: "Poppins", sans-serif;
   color: #ffffff;
   letter-spacing: 0.5px;
   outline: none;
   border: none;
 }
-form h3 {
+.loginPage form h3 {
   font-size: 32px;
   font-weight: 500;
   line-height: 42px;
   text-align: center;
 }
 
-label {
+.loginPage label {
   display: block;
   margin-top: 30px;
   font-size: 16px;
   font-weight: 500;
 }
-input {
+.loginPage input {
   display: block;
   height: 50px;
   background-color: rgba(255, 255, 255, 0.07);

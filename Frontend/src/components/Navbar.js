@@ -1,16 +1,32 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/users/userSlice";
+import logo from "../assests/hackerzCornerLogo.png"
+console.log("logoo", logout);
 
 export default function NavBar() {
     const [navbar, setNavbar] = useState(false);
+    const { user } = useSelector((state) => state.users);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate("/login");
+    };
 
     return (
-        <nav className="w-full bg-[#1f2937] text-white  shadow">
+        <nav className="w-full bg-[#1f2937] text-white font-semibold shadow">
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
-                    <div className="flex items-center justify-between py-3 md:py-5 md:block">
-                        <Link to="">
-                            <h2 className="text-2xl font-bold">LOGO</h2>
+                    <div className="flex items-center justify-between h-[4rem] md:block">
+                        <Link to="/dashboard/Muthulingam">
+                            <img
+                                src={logo}
+                                className="lg:h-full lg:w-full h-[80px]"
+                                alt=""
+                                srcset=""
+                            />
                         </Link>
                         <div className="md:hidden">
                             <button
@@ -58,49 +74,83 @@ export default function NavBar() {
                     >
                         <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
                             <li className=" hover:text-indigo-200">
+                                <Link to="/home">Home</Link>
+                            </li>
+                            <li className=" hover:text-indigo-200">
                                 <Link to="/hackathons">Hackathons</Link>
                             </li>
                             <li className=" hover:text-indigo-200">
                                 <Link to="/jobs">Jobs</Link>
                             </li>
-                            <li className=" hover:text-indigo-200">
+
+                            {/* <li className=" hover:text-indigo-200">
                                 <Link to="">About US</Link>
                             </li>
                             <li className=" hover:text-indigo-200">
                                 <Link to="">Contact US</Link>
-                            </li>
+                            </li> */}
                         </ul>
 
                         <div className="mt-3 space-y-2 lg:hidden md:inline-block">
-                            <Link
-                                to=""
-                                className="inline-block w-full px-4 py-2 text-center bg-gray-600 text-white rounded-md shadow hover:bg-gray-800"
-                            >
-                                Sign in
-                            </Link>
-                            <Link
-                                to=""
-                                className="inline-block w-full px-4 py-2 text-center text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
-                            >
-                                Sign up
-                            </Link>
+                            {user ? (
+                                <div className="hidden space-x-2 md:inline-block">
+                                    <Link
+                                        to="/login"
+                                        className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
+                                        onClick={handleLogout}
+                                    >
+                                        {/* {user.username}
+                                         */}
+                                        Logout
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="hidden space-x-2 md:inline-block">
+                                    <Link
+                                        to="/login"
+                                        className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
+                                    >
+                                        Sign in
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
+                                    >
+                                        Sign up
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
-                <div className="hidden space-x-2 md:inline-block">
-                    <Link
-                        to=""
-                        className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
-                    >
-                        Sign in
-                    </Link>
-                    <Link
-                        to=""
-                        className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
-                    >
-                        Sign up
-                    </Link>
-                </div>
+                {user ? (
+                    <div className="hidden space-x-2 md:inline-block">
+                        <Link
+                            to="/login"
+                            className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
+                            onClick={handleLogout}
+                        >
+                            {/* {user.username}
+                             */}
+                            Logout
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="hidden space-x-2 ">
+                        <Link
+                            to="/login"
+                            className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
+                        >
+                            Sign in
+                        </Link>
+                        <Link
+                            to="/register"
+                            className="px-4 py-2 text-gray-800 bg-white rounded-md shadow hover:bg-gray-100"
+                        >
+                            Sign up
+                        </Link>
+                    </div>
+                )}
             </div>
         </nav>
     );

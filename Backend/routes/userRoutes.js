@@ -1,5 +1,36 @@
 const router = require("express").Router();
 const pool = require("../db.js");
+const bcrypt = require("bcryptjs");
+const JWT = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
+
+router.post("/register", async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        const userExist = await pool.query(
+            "select * from users where email=$1",
+            [email]
+        );
+        if (userExist.rows.length > 0) {
+            res.status(400).send("user with this email already exists");
+        } else {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            const data = await pool.query(
+                "insert into users (name,email,password) values ($1,$2,$3) returning *",
+                [username, email, hashedPassword]
+            );
+            const user = data.rows[0];
+            console.log("registered user", user);
+            const token = JWT.sign({ email }, process.env.jwt_secret, {
+                expiresIn: 360000,
+            });
+            res.json(user);
+        }
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -7,36 +38,29 @@ router.post("/login", async (req, res) => {
         const data = await pool.query("select * from users where email=$1", [
             email,
         ]);
-        console.log(data.rows);
-        if (data.rows.length>0) {
-            const savedPassword = await pool.query(
-                "select password from users where email=$1",
-                [email]
-            );
-            console.log(savedPassword.rows[0].password,password)
-            res.send(password === savedPassword.rows[0].password);
+        if (data.rows.length === 0) {
+            res.status(400).send("user with this email does not exists");
         } else {
-            res.json(data.rows);
+            const user = data.rows[0];
+            let isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                res.status(404).send("invalid credentials");
+            } else {
+                const token =  JWT.sign(
+                    { email },
+                    process.env.jwt_secret,
+                    {
+                        expiresIn: 360000,
+                    }
+                );
+            res.json(user);
+            }
         }
     } catch (err) {
         res.status(400).json(err);
     }
 });
 
-router.post("/register", async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log(username);
-    try {
-        console.log(req.body, "inside");
-        const data = await pool.query(
-            "insert into users (name,email,password) values ($1,$2,$3) returning *",
-            [username, email, password]
-        );
-        console.log(data);
-        res.status(500).json(data);
-    } catch (err) {
-        res.status(400).json(err);
-    }
-});
+
 
 module.exports = router;

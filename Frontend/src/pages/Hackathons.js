@@ -1,9 +1,7 @@
 import React, { useEffect, useState ,useRef} from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import InputBox from "../components/InputBox";
-import Post from "../components/Post";
-import Tpost from "../components/Tpost";
+import { Oval } from "react-loader-spinner";    
+
 function Hackathons() {
     const [events, setEvents] = useState([]);
     const fetchdata = async () => {
@@ -20,22 +18,24 @@ function Hackathons() {
     useEffect(() => {
         fetchdata();
     }, []);
-
-
-
-
     return (
-
-
-
-        
         <div className="w-full bg-[#111827]">
-
-            <div className="space-y-6 w-[50%] mx-auto ">
-                <InputBox />
-                {/* <Post/> */}
-                <Tpost/>
-                <Tpost/>
+            {events.length === 0 ? (
+                <div className=" bg-[#111827] h-[100vh] flex items-center justify-center">
+                    <Oval
+                        height={80}
+                        width={80}
+                        color="#4fa94d"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                        ariaLabel="oval-loading"
+                        secondaryColor="#4fa94d"
+                        strokeWidth={2}
+                        strokeWidthSecondary={2}
+                    />
+                </div>
+            ) : (<div className="space-y-6 w-[50%] mx-auto ">
                 
                 {events.map((event) => {
                     return (
@@ -104,22 +104,11 @@ function Hackathons() {
                         </a>
                     );
                 })}
-            </div>
+            </div>)
+            }
         </div>
     );
 }
 
 export default Hackathons;
 
-// <div
-//     key={event.id}
-//     className=" p-8 grid grid-col-1  rounded-md  bg-gray-600"
-// >
-//     <img
-//         className="rounded-md"
-//         src={event.thumbnail_url}
-//         alt=""
-//         srcset=""
-//     />
-//     <h1 className="text-white font-bold">{event.title}</h1>
-// </div>
