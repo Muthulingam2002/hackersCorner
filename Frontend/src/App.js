@@ -9,9 +9,8 @@ import Posts from "./pages/Posts";
 import EditDetails from "./pages/EditDetails";
 function App() {
     return (
-        <div className="bg-[#111827] overflow-hidden">
+        <div className=" overflow-hidden bg-[url(https://laracasts.com/images/forum/upper-gradient.svg)] bg-[#151f32]  bg-no-repeat">
             <BrowserRouter>
-                <Navbar className="" />
                 <Routes>
                     <Route exact path="/hackathons" element={<Hackathons />} />
                     <Route exact path="/jobs" element={<Jobs />} />

@@ -6,6 +6,9 @@ import UserForm from "../components/UserForm";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { editDetails } from "../redux/users/userSlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import NavBar from "../components/Navbar";
 
 const options = [
     {
@@ -101,51 +104,19 @@ const options = [
 ];
 
 function EditDetails() {
-    const [profileImg, setImageProfile] = useState(
-        "https://res.cloudinary.com/dqalbizzj/image/upload/v1677281657/pngwing.com_ubotpa.png"
-    );
-
-    const picker = useRef(null);
-
-    const [uploadImage, setUploadImage] = useState(
-        "https://res.cloudinary.com/dqalbizzj/image/upload/v1677281657/pngwing.com_ubotpa.png"
-    );
-    const [leetid, setleetid] = useState(null);
-    const [position, setPosition] = useState(null);
-    const [institution, setInstitution] = useState(null);
-    const [description, setDescription] = useState(null);
-    const [skills, setSkills] = useState([]);
     const dispatch = useDispatch();
     const { isLoading, isSuccess, isError, message, user } = useSelector(
         (state) => state.users
     );
-    console.log("users", user);
 
-    useEffect(() => {
-        const fetchDetails = async () => {
-            try {
-                const res = await axios.post(
-                    "http://localhost:5000/details/fetch",
-                    {
-                        id: user.user_id,
-                    }
-                );
-                if (res.data[0].avatar) {
-                    setImageProfile(res.data[0].avatar);
-                }
-                setDescription(res.data[0].description);
-                setInstitution(res.data[0].institution);
-                setPosition(res.data[0].position);
-                setleetid(res.data[0].leetcodeid);
-                if (res.data[0].avatar) {
-                    setSkills(res.data[0].skills);
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        fetchDetails();
-    }, []);
+    const picker = useRef(null);
+    const [uploadImage, setUploadImage] = useState(user.avatar);
+    const [profileImg, setImageProfile] = useState(user.avatar);
+    const [leetcodeid, setleetcodeid] = useState(user.leetcodeid);
+    const [position, setPosition] = useState(user.position);
+    const [institution, setInstitution] = useState(user.institution);
+    const [description, setDescription] = useState(user.description);
+    const [skills, setSkills] = useState(user.skills);
 
     const addimage = (e) => {
         const reader = new FileReader();
@@ -156,38 +127,59 @@ function EditDetails() {
 
         reader.onload = (readerEvent) => {
             setImageProfile(readerEvent.target.result);
-            alert(profileImg);
+        };
+        reader.onloadend = () => {
+            uploadImagetocloud(reader.result);
         };
     };
-
-    const handleUpload = async () => {
-        console.log("handling upload");
-        const formData = new FormData();
-        formData.append("file", uploadImage);
-        formData.append("upload_preset", "zexonrda");
+    const uploadImagetocloud = async (base64EncodedImage) => {
+        console.log(base64EncodedImage);
         try {
-            const response = await axios.post(
-                `https://api.cloudinary.com/v1_1/dqalbizzj/image/upload`,
-                formData
+            const data = await axios.post(
+                "http://localhost:5000/details/upload",
+                {
+                    id: user.id,
+                    data: base64EncodedImage,
+                }
             );
-            console.log(response.data);
-            setUploadImage(response.data.secure_url);
-        } catch (error) {
-            console.error("Error:", error);
+            console.log(data);
+            alert(data.data);
+            localStorage.setItem("user", JSON.stringify(data.data));
+            toast.success(" profile image uploaded succesfully");
+        } catch (err) {
+            console.error(err);
+            toast.error(err);
         }
     };
 
+    // const handleUpload = async () => {
+    //     console.log("handling upload");
+    //     const formData = new FormData();
+    //     formData.append("file", uploadImage);
+    //     formData.append("upload_preset", "zexonrda");
+    //     try {
+    //         const response = await axios.post(
+    //             `https://api.cloudinary.com/v1_1/dqalbizzj/image/upload`,
+    //             formData
+    //         );
+    //         console.log(response.data);
+    //         setUploadImage(response.data.secure_url);
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //     }
+    // };
+
     const handleSubmit = async () => {
         const newData = {
-            id: user.user_id,
-            avatar: uploadImage,
-            leetcodeid: leetid,
+            id: user.id,
+            leetcodeid: leetcodeid,
             position: position,
             institution: institution,
             description: description,
             skills: skills,
         };
         try {
+            console.log("edit", newData);
             dispatch(editDetails(newData));
         } catch (err) {
             alert(err.message);
@@ -208,135 +200,142 @@ function EditDetails() {
     };
 
     return (
-        <div className="flex flex-col space-y-6 justify-center items-center">
-            <div className="w-full mt-4 flex flex-col justify-center items-center">
-                <img
-                    onClick={() => picker.current.click()}
-                    className="h-24 w-24 rounded-full object-contain"
-                    src={profileImg}
-                    alt=""
-                    srcset=""
+        <div>
+            <NavBar />
+            <div className="flex flex-col space-y-6 justify-center items-center">
+                <div className=" mt-4 flex flex-col justify-center items-center bg-slate-200 rounded-full p-1">
+                    <img
+                        onClick={() => picker.current.click()}
+                        className="h-24 w-24 rounded-full "
+                        src={profileImg}
+                        alt=""
+                        srcset=""
+                    />
+                </div>
+                <input
+                    className="hidden"
+                    ref={picker}
+                    onChange={(e) => addimage(e)}
+                    type="file"
+                    name=""
+                    id=""
                 />
+                {/* <UserForm /> */}
+
+                <div className="flex w-full items-center justify-center">
+                    <div className="w-[50%] overflow-y-hidden">
+                        <form className="space-y-6">
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                    @
+                                </span>
+                                <input
+                                    type="text"
+                                    id="website-admin"
+                                    class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="leetcode id"
+                                    value={leetcodeid}
+                                    onChange={(e) =>
+                                        setleetcodeid(e.target.value)
+                                    }
+                                />
+                            </div>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                    💼
+                                </span>
+                                <input
+                                    type="text"
+                                    id="website-admin"
+                                    class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="position"
+                                    value={position}
+                                    onChange={(e) =>
+                                        setPosition(e.target.value)
+                                    }
+                                />
+                            </div>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                    🎓
+                                </span>
+                                <input
+                                    type="text"
+                                    id="website-admin"
+                                    class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="institution"
+                                    value={institution}
+                                    onChange={(e) =>
+                                        setInstitution(e.target.value)
+                                    }
+                                />
+                            </div>
+                            <div class="px-4 py-2 bg-white rounded-lg outline-none    dark:bg-gray-800">
+                                <label for="comment" class="sr-only">
+                                    Your comment
+                                </label>
+                                <textarea
+                                    id="comment"
+                                    rows="4"
+                                    class="w-full px-0  resize-none text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 outline-none"
+                                    placeholder="Description..."
+                                    value={description}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
+                                    required
+                                ></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div className="w-[50%]">
+                    {/* <SkillForm /> */}
+
+                    <div className="p-4">
+                        <h1 className="text-2xl text-white font-bold mb-4">
+                            Add a Skill
+                        </h1>
+                        <Select
+                            styles={{ backgroundColor: "red" }}
+                            options={options}
+                            onChange={handleSkillSelect}
+                            placeholder="Select a skill"
+                        />
+                        <div className="mt-8">
+                            <h2 className="text-3xl text-white font-bold mb-4">
+                                My Skills
+                            </h2>
+                            <div className="grid grid-cols-2 gap-x-24">
+                                {skills &&
+                                    skills.map((skill, index) => (
+                                        <div
+                                            key={index}
+                                            className="mb-4 flex items-center text-center space-x-3 bg-gray-600 p-2 rounded-md"
+                                        >
+                                            <img
+                                                src={skill.image}
+                                                alt={skill.name}
+                                                className="w-16 h-16 object-cover"
+                                            />
+                                            <h3 className="text-lg font-bold  mb-2 text-white">
+                                                {skill.name}
+                                            </h3>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button
-                    onClick={handleUpload}
+                    onClick={handleSubmit}
                     className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-blue-800 text-white"
                 >
                     Update
                 </button>
+                <ToastContainer />
             </div>
-            <input
-                className="hidden"
-                ref={picker}
-                onChange={(e) => addimage(e)}
-                type="file"
-                name=""
-                id=""
-            />
-            {/* <UserForm /> */}
-
-            <div className="flex w-full items-center justify-center">
-                <div className="w-[50%] overflow-y-hidden">
-                    <form className="space-y-6">
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                @
-                            </span>
-                            <input
-                                type="text"
-                                id="website-admin"
-                                class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="leetcode id"
-                                value={leetid}
-                                onChange={(e) => setleetid(e.target.value)}
-                            />
-                        </div>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                💼
-                            </span>
-                            <input
-                                type="text"
-                                id="website-admin"
-                                class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="position"
-                                value={position}
-                                onChange={(e) => setPosition(e.target.value)}
-                            />
-                        </div>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                🎓
-                            </span>
-                            <input
-                                type="text"
-                                id="website-admin"
-                                class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="institution"
-                                value={institution}
-                                onChange={(e) => setInstitution(e.target.value)}
-                            />
-                        </div>
-                        <div class="px-4 py-2 bg-white rounded-lg outline-none    dark:bg-gray-800">
-                            <label for="comment" class="sr-only">
-                                Your comment
-                            </label>
-                            <textarea
-                                id="comment"
-                                rows="4"
-                                class="w-full px-0  resize-none text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 outline-none"
-                                placeholder="Description..."
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            ></textarea>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div className="w-[50%]">
-                {/* <SkillForm /> */}
-
-                <div className="p-4">
-                    <h1 className="text-2xl text-white font-bold mb-4">
-                        Add a Skill
-                    </h1>
-                    <Select
-                        styles={{ backgroundColor: "red" }}
-                        options={options}
-                        onChange={handleSkillSelect}
-                        placeholder="Select a skill"
-                    />
-                    <div className="mt-8">
-                        <h2 className="text-3xl text-white font-bold mb-4">
-                            My Skills
-                        </h2>
-                        <div className="grid grid-cols-2 gap-x-24">
-                            {skills.map((skill, index) => (
-                                <div
-                                    key={index}
-                                    className="mb-4 flex items-center text-center space-x-3 bg-gray-600 p-2 rounded-md"
-                                >
-                                    <img
-                                        src={skill.image}
-                                        alt={skill.name}
-                                        className="w-16 h-16 object-cover"
-                                    />
-                                    <h3 className="text-lg font-bold  mb-2 text-white">
-                                        {skill.name}
-                                    </h3>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button
-                onClick={handleSubmit}
-                className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-blue-800 text-white"
-            >
-                Update
-            </button>
         </div>
     );
 }

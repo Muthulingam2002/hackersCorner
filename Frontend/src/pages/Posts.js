@@ -3,6 +3,7 @@ import Tpost from "../components/Tpost";
 import InputBox from "../components/InputBox"
 import axios from "axios";
 import { useSelector } from "react-redux";
+import NavBar from "../components/Navbar";
 
 
 function Posts() {
@@ -17,13 +18,15 @@ function Posts() {
     fetchdata()
   }, []);
   return (
-      <div className="">
-      I<InputBox />
+      <div >
+          <NavBar />
+          <InputBox />
           {posts.map((post) => {
+              console.log("avatar", post.avatar);
               return (
                   <div className="p-10">
-                  <Tpost
-                    name={post.name}
+                      <Tpost
+                          name={post.name}
                           id={post.id}
                           image={post.image}
                           avatar={post.avatar}

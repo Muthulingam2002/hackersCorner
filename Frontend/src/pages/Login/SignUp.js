@@ -9,6 +9,7 @@ import { login, register } from "../../redux/users/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import bannerVideo from "../../assests/banner-animation-of-website-de-unscreen.gif"
 
 function SignUp() {
     const [email, setEmail] = useState("");
@@ -59,14 +60,14 @@ function SignUp() {
                                 value={username}
                                 placeholder="username"
                             />
-                            <input
+                            {/* <input
                                 className="p-2 rounded-xl border"
                                 type="text"
                                 name="email"
                                 onChange={(e) => setLeetID(e.target.value)}
                                 value={leetID}
                                 placeholder="leetcode id"
-                            />
+                            /> */}
                             <input
                                 className="p-2 rounded-xl border"
                                 type="email"
@@ -88,7 +89,7 @@ function SignUp() {
                                 onClick={handleSubmit}
                                 className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300"
                             >
-                                Login
+                                Register
                             </button>
                         </form>
 
@@ -133,7 +134,7 @@ function SignUp() {
                             <p>have an account?</p>
                             <Link to="/login">
                                 <button className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300">
-                                    Register
+                                    Login
                                 </button>
                             </Link>
                         </div>
@@ -144,10 +145,12 @@ function SignUp() {
                             className="rounded-2xl"
                             src="https://images.unsplash.com/photo-1496016943515-7d33598c11e6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1528&q=80"
                         />
+   
+                        {/* <img src={bannerVideo} alt="" srcset="" /> */}
                     </div>
                 </div>
             </section>
-             <ToastContainer />
+            <ToastContainer />
         </div>
     );
 }

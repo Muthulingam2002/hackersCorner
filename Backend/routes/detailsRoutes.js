@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../db.js");
 const dotenv = require("dotenv").config();
+const { cloudinary } = require("../utils/cloudinary.js");
 
 router.post("/fetch", async (req, res) => {
     const { id } = req.body;
@@ -14,24 +15,34 @@ router.post("/fetch", async (req, res) => {
 });
 
 router.post("/edit", async (req, res) => {
-    const {
-        id,
-        avatar,
-        leetcodeid,
-        position,
-        institution,
-        description,
-        skills,
-    } = req.body;
+    const { id, leetcodeid, position, institution, description, skills } =
+        req.body;
     try {
         const data = await pool.query(
-            "update users set leetcodeid=$1,avatar=$3,position=$4,institution=$5,description=$6,skills=$7 where id=$2 returning *",
-            [leetcodeid, id, avatar, position, institution, description, skills]
+            "update users set leetcodeid=$1,position=$3,institution=$4,description=$5,skills=$6 where id=$2 returning *",
+            [leetcodeid, id, position, institution, description, skills]
         );
-        console.log(data.rows);
         res.json(data.rows[0]);
     } catch (err) {
         res.status(400).send(err);
+    }
+});
+
+router.post("/upload", async (req, res) => {
+    console.log("called");
+    try {
+        const fileStr = req.body.data;
+        const id = req.body.id;
+        const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+            upload_preset: "zexonrda",
+        });
+        const data = await pool.query(
+            "update users set avatar=$1 where id=$2 returning *",
+            [uploadResponse.secure_url, id]
+        );
+        res.json(data.rows[0]);
+    } catch (err) {
+        res.status(500).json({ err: "Something went wrong" });
     }
 });
 

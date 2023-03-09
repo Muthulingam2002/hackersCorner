@@ -13,8 +13,6 @@ const InputBox = () => {
     let [uploadfile, setUploadFile] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
     const { user } = useSelector((state) => state.users);
-    console.log("ueser",user)
-
     const cl = new Cloudinary({
         cloud_name: "dqalbizzj",
     });
@@ -56,6 +54,10 @@ const InputBox = () => {
         upload();
     }, [imageUrl]);
 
+    const handleBold = () => {
+        setText((prevText) => prevText + "**bold text**");
+    };
+
     const addImageToPost = (e) => {
         const reader = new FileReader();
         setUploadFile(e.target.files[0]);
@@ -74,23 +76,23 @@ const InputBox = () => {
 
     return (
         <>
-            <div className="flex flex-col bg-[#081c3d] w-[50%] mx-auto p-2 rounded-md space-y-3">
+            <div className="flex flex-col bg-[#14253D] lg:w-[50%] w-[90%] mx-auto mt-5 p-2 rounded-md space-y-3 ">
                 <div className="flex w-[full] justify-between ">
                     <img
                         className="h-8 w-8 bg-blue-200 rounded-full p-1"
                         src={user.avatar}
                     />
                     <div class="text-xs mr-2 py-1.5 px-4 text-gray-600 bg-blue-200 rounded-2xl">
-                        {user.username}
+                        {user.name}
                     </div>
                 </div>
-                <div className="Top text-xs flex items-center bg-[#1f2937] space-x-2">
+                <div className="Top text-xs   rounded-xl flex items-center bg-[#1f2937] space-x-2">
                     <textarea
                         onChange={(e) => {
                             setText(e.target.value);
                         }}
                         value={Text}
-                        className="w-[100%] bg-[#374151] outline-none focus:outline-none p-[8px] sm:p-3 rounded-xl h-[200px] resize-none text-white font-sans text-sm "
+                        className="w-[100%]  rounded-xl bg-[#374151] outline-none focus:outline-none p-[8px] sm:p-3 h-[200px] resize-none text-white font-sans text-sm "
                         Text="text"
                         placeholder={`Whats in Your Mind `}
                     />
@@ -115,7 +117,7 @@ const InputBox = () => {
                 {Text || File ? (
                     <button
                         onClick={handleUpload}
-                        className="p-[2px] sm:p-3 bg-blue-200  text-gray-600 rounded-full sm:text-sm text-[10px]"
+                        className="p-[2px] sm:p-3 bg-blue-200 lg:w-[20%] mx-auto w-[40%] text-gray-600 rounded-full sm:text-sm text-[10px]"
                     >
                         Add Post
                     </button>

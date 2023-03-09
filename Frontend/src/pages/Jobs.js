@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Filter from "../components/Filters";
-import {Oval} from "react-loader-spinner";    
+import { Oval } from "react-loader-spinner";
+import NavBar from "../components/Navbar";
 
 const Jobs = () => {
     const [jobs, setJobs] = useState([]);
@@ -20,47 +21,41 @@ const Jobs = () => {
         fetchdata();
     }, []);
     return (
-        <div className="w-full bg-[#111827] flex items-center justify-center mt-2">
-            {jobs.length === 0 ? (
-                <div className=" bg-[#111827] h-[100vh] flex items-center justify-center">
-                    <Oval
-                        height={80}
-                        width={80}
-                        color="#4fa94d"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        visible={true}
-                        ariaLabel="oval-loading"
-                        secondaryColor="#4fa94d"
-                        strokeWidth={2}
-                        strokeWidthSecondary={2}
-                    />
-                </div>
-            ) : (
-                <div>
-                    <div className="ml-[12%]">
-                        {/* <Filter /> */}
+        <div>
+            <NavBar />
+            <div className="w-full flex items-center justify-center mt-2">
+                {jobs.length === 0 ? (
+                    <div className=" h-[100vh] flex items-center justify-center">
+                        <Oval
+                            height={80}
+                            width={80}
+                            color="#4fa94d"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                            ariaLabel="oval-loading"
+                            secondaryColor="#4fa94d"
+                            strokeWidth={2}
+                            strokeWidthSecondary={2}
+                        />
                     </div>
-                    <div className="space-y-6 w-[50%] mx-auto ">
-                        {jobs.map((job) => {
-                            return (
-                                <a
-                                    href={
-                                        "https://unstop.com/" +
-                                        `${job.public_url}`
-                                    }
-                                >
-                                    <div className="bg-[#374151] max-w-sm m-10 shadow-2xl w-full lg:max-w-full lg:flex border border-gray-400 p-2 rounded-lg ">
-                                        <div className="w-[30%] flex items-center justify-center">
+                ) : (
+                    <div className="w-[100%] flex flex-col items-center">
+                        <div className="ml-[12%] ">{/* <Filter /> */}</div>
+                        <div className="space-y-7  lg:w-[50%] lg:mx-auto  w-[80%]">
+                            {jobs.map((job) => {
+                                return (
+                                    <div className="shadow-2xl space-y-6 w-full lg:max-w-full lg:flex border border-gray-400 p-2 rounded-lg  bg-[#151f32] bg-[url(https://laracasts.com/images/forum/upper-gradient.svg)] bg-no-repeat p-2 rounded-md border border-slate-600">
+                                        <div className="lg:w-[40%] md:w-[40%] flex items-center justify-center">
                                             <img
-                                                className="object-fit border border-gray-200 m-5 rounded-md h-[80%] shadow-md"
+                                                className="object-fit border border-gray-200 m-5 rounded-md h-[80%] shadow-md  object-fit"
                                                 src={
                                                     job.banner_mobile.image_url
                                                 }
                                                 alt="thumbnail "
                                             />
                                         </div>
-                                        <div className="p-4 flex flex-col justify-between leading-normal">
+                                        <div className="p-4 flex flex-col justify-between leading-normal w-full">
                                             <div className="mb-8 ">
                                                 {job.status ? (
                                                     <p className="text-sm text-white flex items-center">
@@ -89,12 +84,13 @@ const Jobs = () => {
                                                     {job.title}
                                                 </div>
                                                 <p className="text-white text-base">
-                                                    Salary{" ₹"}
+                                                    Salary
                                                     <span className="font-bold">
-                                                        {
-                                                            job.jobDetail
-                                                                .max_salary
-                                                        }
+                                                        {job.jobDetail
+                                                            ? " ₹" +
+                                                              job.jobDetail
+                                                                  .max_salary
+                                                            : "Not disclosed"}
                                                     </span>
                                                 </p>
                                             </div>
@@ -104,9 +100,10 @@ const Jobs = () => {
                                                     alt="Avatar of Jonathan Reinink"
                                                     src={job.logoUrl2}
                                                 />
-                                                <div className="text-sm">
+                                                <p>{job.organization_name}</p>
+                                                <div className="text-6 font-medium flex justify-between w-full">
                                                     <p className="text-white leading-none">
-                                                        {job.organization_name}
+                                                        {job.organisation.name}
                                                     </p>
                                                     <p className="text-white">
                                                         {
@@ -114,15 +111,25 @@ const Jobs = () => {
                                                         }
                                                     </p>
                                                 </div>
+                                                <a
+                                                    href={
+                                                        "https://unstop.com/" +
+                                                        `${job.public_url}`
+                                                    }
+                                                >
+                                                    <button className="px-4 py-2 bg-blue-400 rounded-md shadow hover:bg-blue-300  text-white   ">
+                                                        apply
+                                                    </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                </a>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

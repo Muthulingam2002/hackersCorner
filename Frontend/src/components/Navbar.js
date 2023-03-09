@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/users/userSlice";
-import logo from "../assests/hackerzCornerLogo.png"
+import logo from "../assests/hackerzCornerLogo.png";
 console.log("logoo", logout);
 
 export default function NavBar() {
@@ -16,11 +16,11 @@ export default function NavBar() {
     };
 
     return (
-        <nav className="w-full bg-[#1f2937] text-white font-semibold shadow">
+        <nav className="w-full text-white font-semibold shadow">
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                 <div>
                     <div className="flex items-center justify-between h-[4rem] md:block">
-                        <Link to="/dashboard/Muthulingam">
+                        <Link to="/home">
                             <img
                                 src={logo}
                                 className="lg:h-full lg:w-full h-[80px]"
@@ -81,8 +81,12 @@ export default function NavBar() {
                             </li>
                             <li className=" hover:text-indigo-200">
                                 <Link to="/jobs">Jobs</Link>
+                            </li>{" "}
+                            <li className=" hover:text-indigo-200">
+                                <Link to={`/dashboard/${user.leetcodeid}`}>
+                                    Dashboard
+                                </Link>
                             </li>
-
                             {/* <li className=" hover:text-indigo-200">
                                 <Link to="">About US</Link>
                             </li>
@@ -93,10 +97,10 @@ export default function NavBar() {
 
                         <div className="mt-3 space-y-2 lg:hidden md:inline-block">
                             {user ? (
-                                <div className="hidden space-x-2 md:inline-block">
+                                <div className="md:hidden">
                                     <Link
                                         to="/login"
-                                        className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
+                                        className="px-2 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
                                         onClick={handleLogout}
                                     >
                                         {/* {user.username}
@@ -124,17 +128,16 @@ export default function NavBar() {
                     </div>
                 </div>
                 {user ? (
-                    <div className="hidden space-x-2 md:inline-block">
-                        <Link
-                            to="/login"
-                            className="px-4 py-2 bg-gray-600 rounded-md shadow hover:bg-gray-800"
-                            onClick={handleLogout}
-                        >
-                            {/* {user.username}
-                             */}
-                            Logout
-                        </Link>
-                    </div>
+                    <Link to="/login" onClick={handleLogout}
+                    className="bg-slate-200 p-1  rounded-full">
+                        <img
+                            src={user.avatar}
+                            className="hidden h-8 w-8 rounded-full md:inline-block"
+                        />
+                        {/* {user.username}
+                         */}
+                        {/* Logout */}
+                    </Link>
                 ) : (
                     <div className="hidden space-x-2 ">
                         <Link

@@ -36,17 +36,19 @@ export const login = createAsyncThunk(
 export const editDetails = createAsyncThunk(
     "user/edit",
     async (newData, thunkAPI) => {
+        console.log("new Data",newData  )
         return await axios
             .post("http://localhost:5000/details/edit", {
                 id: 10,
-                avatar: newData.uploadImage,
-                leetcodeid: newData.leetid,
+                leetcodeid: newData.leetcodeid,
                 position: newData.position,
                 institution: newData.institution,
                 description: newData.description,
                 skills: newData.skills,
             })
             .then((res) => {
+                alert(res.data)
+                console.log("res",res.data)
                 localStorage.setItem("user", JSON.stringify(res.data));
                 return res.data;
             })
@@ -106,7 +108,8 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.user = action.payload;
-            console.log(user, action.payload);
+            state.name = state.user.name;
+            console.log("userrrrrr",state.user, action.payload);
             console.log("login success");
         },
         [login.pending]: (state) => {
@@ -126,7 +129,7 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             console.log("payload", action.payload);
-            console.log(user, action.payload);
+            console.log(state.user, action.payload);
             state.isSuccess = true;
         },
         [register.pending]: (state, action) => {

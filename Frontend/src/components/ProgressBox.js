@@ -12,12 +12,12 @@ function ProgressBox() {
         const [total, setTotal] = useState([]);
         const [probSolved, setSolved] = useState(null);
         const [err, setError] = useState(null);
-        const params = useParams();
+        const {leetid} = useParams();
         useEffect(() => {
             const fetchleet = async () => {
                 try {
                     const data = await axios.get(
-                        `http://localhost:5000/leetcode/${params.leetid}`
+                        `http://localhost:5000/leetcode/${leetid}`
                     );
                     setUser(data.data.userCount);
                     console.log(user);
@@ -32,11 +32,13 @@ function ProgressBox() {
         }, []);
   return (
       <div className="w-full  flex  flex-col justify-center items-center">
-          <p className='text-white font-bold text-start w-[50%] '>LeetCodeId:  {params.leetid}</p>
+          <p className="text-white font-bold text-start lg:w-[50%] ">
+              LeetCodeId: {leetid}
+          </p>
           {user.length > 0 && (
               <div
                   id="progress-container"
-                  className=" bg-slate-500 w-[50%] flex justify-center items-center rounded-lg bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 shadow-black shadow-2xl"
+                  className=" lg:w-[50%] w-[90%] flex justify-center items-center  bg-[#151f32] bg-[url(https://laracasts.com/images/forum/upper-gradient.svg)] bg-no-repeat rounded-lg p-7 border border-slate-600 "
               >
                   {console.log("user", user, "total", total)}
                   <div id="progress-circle" className="w-[13rem] p-4">
