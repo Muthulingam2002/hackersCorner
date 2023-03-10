@@ -136,14 +136,13 @@ function EditDetails() {
         console.log(base64EncodedImage);
         try {
             const data = await axios.post(
-                "http://localhost:5000/details/upload",
+                `${process.env.REACT_APP_URL}details/`,
                 {
                     id: user.id,
                     data: base64EncodedImage,
                 }
             );
             console.log(data);
-            alert(data.data);
             localStorage.setItem("user", JSON.stringify(data.data));
             toast.success(" profile image uploaded succesfully");
         } catch (err) {
@@ -151,23 +150,6 @@ function EditDetails() {
             toast.error(err);
         }
     };
-
-    // const handleUpload = async () => {
-    //     console.log("handling upload");
-    //     const formData = new FormData();
-    //     formData.append("file", uploadImage);
-    //     formData.append("upload_preset", "zexonrda");
-    //     try {
-    //         const response = await axios.post(
-    //             `https://api.cloudinary.com/v1_1/dqalbizzj/image/upload`,
-    //             formData
-    //         );
-    //         console.log(response.data);
-    //         setUploadImage(response.data.secure_url);
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //     }
-    // };
 
     const handleSubmit = async () => {
         const newData = {
@@ -223,7 +205,7 @@ function EditDetails() {
                 {/* <UserForm /> */}
 
                 <div className="flex w-full items-center justify-center">
-                    <div className="w-[50%] overflow-y-hidden">
+                <div className="lg:w-[50%] w-[80%] overflow-y-hidden">
                         <form className="space-y-6">
                             <div class="flex">
                                 <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -290,7 +272,7 @@ function EditDetails() {
                     </div>
                 </div>
 
-                <div className="w-[50%]">
+                <div className="lg:w-[50%] w-[80%]">
                     {/* <SkillForm /> */}
 
                     <div className="p-4">
@@ -307,7 +289,7 @@ function EditDetails() {
                             <h2 className="text-3xl text-white font-bold mb-4">
                                 My Skills
                             </h2>
-                            <div className="grid grid-cols-2 gap-x-24">
+                            <div className="grid lg:grid-cols-3 grid-cols-2 gap-x-3">
                                 {skills &&
                                     skills.map((skill, index) => (
                                         <div
@@ -319,7 +301,7 @@ function EditDetails() {
                                                 alt={skill.name}
                                                 className="w-16 h-16 object-cover"
                                             />
-                                            <h3 className="text-lg font-bold  mb-2 text-white">
+                                            <h3 className="lg:text-lg font-bold  mb-2 text-white">
                                                 {skill.name}
                                             </h3>
                                         </div>

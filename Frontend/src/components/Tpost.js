@@ -12,11 +12,12 @@ import { useSelector } from "react-redux";
 function Tpost({ id, name, image, isLiked, caption, avatar }) {
     const [liked, setliked] = useState(isLiked);
     const { user } = useSelector((state) => state.users);
+
     const handleLike = async () => {
         try {
             console.log("change befoer", liked);
             const res = await axios.post(
-                "http://localhost:5000/posts/alterLike",
+                `${process.env.REACT_APP_URL}posts/alterLike`,
                 {
                     id: id,
                     state: !liked,
@@ -31,17 +32,17 @@ function Tpost({ id, name, image, isLiked, caption, avatar }) {
 
     const handlePostDelete = async (id) => {
         try {
-            
-            const data = await axios.post("http://localhost:5000/posts/delete", {
-                id:id
-            })
-            console.log(data.data)
+            const data = await axios.post(
+                `${process.env.REACT_APP_URL}posts/delete`,
+                {
+                    id: id,
+                }
+            );
+            console.log(data.data);
+        } catch (err) {
+            console.log(err);
         }
-        catch (err) {
-            console.log(err)
-        }
-
-   }
+    };
 
     return (
         <>
@@ -83,8 +84,9 @@ function Tpost({ id, name, image, isLiked, caption, avatar }) {
                         <PaperAirplaneIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />
 
                         {user.name == name ? (
-                            <TrashIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" 
-                                onClick={()=>handlePostDelete(id)}
+                            <TrashIcon
+                                className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out"
+                                onClick={() => handlePostDelete(id)}
                             />
                         ) : (
                             <ChatAltIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />

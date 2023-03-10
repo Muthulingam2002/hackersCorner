@@ -8,7 +8,7 @@ function Hackathons() {
     const fetchdata = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/opportunities/hackathons"
+                `${process.env.REACT_APP_URL}opportunities/hackathons`
             );
             console.log(res.data.hackathons);
             setEvents(res.data.hackathons);

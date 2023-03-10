@@ -37,8 +37,9 @@ const InputBox = () => {
         console.log("uploading....");
         const upload = async () => {
             if (imageUrl) {
+                
                 const res = await axios.post(
-                    "http://localhost:5000/posts/addPost",
+                    `${process.env.REACT_APP_URL}posts/addPost`,
                     {
                         user_id: user.id,
                         name: user.name,

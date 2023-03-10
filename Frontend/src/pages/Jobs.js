@@ -9,7 +9,7 @@ const Jobs = () => {
     const fetchdata = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/opportunities/jobs"
+                `${process.env.REACT_APP_URL}opportunities/jobs`
             );
             console.log(res.data.data.data);
             setJobs(res.data.data.data);

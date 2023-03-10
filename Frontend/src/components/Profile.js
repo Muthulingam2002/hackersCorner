@@ -80,8 +80,8 @@ function Profile() {
                 <Link to="/edit" className="absolute right-6">
                     <PencilAltIcon className="h-7 w-7   text-white" />
                 </Link>
-                <p className="text-white font-bold mb-10">{user.name}</p>
-                <p className="text-white font-bold">💼 student</p>
+                <p className="text-white font-bold mb-8">{user.name}</p>
+                <p className="text-white font-bold">💼 {user.position}</p>
                 <p className="text-white font-bold">🎓 {user.institution} </p>
                 <div
                     id="aboutme"
