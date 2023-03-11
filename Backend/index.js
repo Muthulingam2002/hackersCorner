@@ -8,7 +8,11 @@ const postRoutes = require("./routes/postRoutes");
 const detailsRoutes = require("./routes/detailsRoutes");
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: ["http://localhost:3000", "https://hackers-corner.vercel.app"],
+    })
+);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 
@@ -65,5 +69,5 @@ app.get("/leetcode/:user", async (req, res) => {
 });
 
 app.listen(5000, (req, res) => {
-    console.log("app is running in 5000");
+    console.log("app is running in");
 });

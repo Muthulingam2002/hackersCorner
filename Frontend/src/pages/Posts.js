@@ -10,9 +10,7 @@ function Posts() {
 
     useEffect(() => {
         const fetchdata = async () => {
-            const res = await axios.get(
-                `${process.env.REACT_APP_URL}posts/fetchPost`
-            );
+            const res = await axios.get(`${process.env.REACT_APP_URL}posts/fetchPost`);
             console.log(res.data.data);
             setPosts(res.data.data);
         };
@@ -23,7 +21,7 @@ function Posts() {
             <NavBar />
             <InputBox />
             {posts.map((post) => {
-                console.log("avatar", post.avatar);REACT_APP_URL;
+                console.log("avatar", post.avatar);
                 return (
                     <div className="p-10">
                         <Post

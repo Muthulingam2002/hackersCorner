@@ -14,7 +14,6 @@ function App() {
                 <Routes>
                     <Route exact path="/hackathons" element={<Hackathons />} />
                     <Route exact path="/jobs" element={<Jobs />} />
-                    <Route exact path="/login" element={<Login />} />
                     <Route exact path="/register" element={<SignUp />} />
                     <Route
                         exact
@@ -22,7 +21,8 @@ function App() {
                         element={<Dashboard />}
                     />
                     <Route exact path="/edit" element={<EditDetails />} />
-                    <Route exact path="/*" element={<Posts />} />
+                    <Route exact path="/home" element={<Posts />} />
+                    <Route exact path="/*" element={<Login />} />
                 </Routes>
             </BrowserRouter>
         </div>
