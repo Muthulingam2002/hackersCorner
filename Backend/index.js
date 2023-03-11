@@ -64,7 +64,7 @@ app.get("/leetcode/:user", async (req, res) => {
         };
         res.json(submissionDetail);
     } catch (err) {
-        res.status(404).json("user not found");
+        res.status(404).json(`${user} not found`);
     }
 });
 
