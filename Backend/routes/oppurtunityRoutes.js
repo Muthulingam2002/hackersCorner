@@ -6,7 +6,6 @@ router.get("/jobs", async (req, res) => {
         const response = await axios.get(
             "https://unstop.com/api/public/opportunity/search-result?opportunity=jobs&page=1&per_page=15&types=oppstatus,job_type,job_timing,working_days,eligible,category,location&filters=,,,,,,"
         );
-        console.log("ressss",response.data)
         res.json(response.data);
     } catch (err) {
         res.send(err);

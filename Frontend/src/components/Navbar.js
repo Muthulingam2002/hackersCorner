@@ -129,7 +129,7 @@ export default function NavBar() {
                 </div>
                 {user ? (
                     <Link to="/login" onClick={handleLogout}
-                    className="bg-slate-200 p-1  rounded-full">
+                    className="bg-slate-200 p-1 hidden rounded-full lg:inline-block">
                         <img
                             src={user.avatar}
                             className="hidden h-8 w-8 rounded-full md:inline-block"

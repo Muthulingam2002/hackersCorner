@@ -87,11 +87,6 @@ function Hackathons() {
                                             </p>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            {/* <img
-                                            className="w-10 h-10 rounded-full mr-4"
-                                            alt="Avatar of Jonathan Reinink"
-                                            src={event.thumbnail_url}
-                                        /> */}
                                             <div className="text-sm">
                                                 <p className="text-white leading-none">
                                                     {event.organization_name}

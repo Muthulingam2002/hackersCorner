@@ -39,7 +39,7 @@ export const editDetails = createAsyncThunk(
         console.log("new Data",newData  )
         return await axios
             .post(`${process.env.REACT_APP_URL}details/edit`, {
-                id: 10,
+                id: newData.id,
                 leetcodeid: newData.leetcodeid,
                 position: newData.position,
                 institution: newData.institution,

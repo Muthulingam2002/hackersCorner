@@ -4,6 +4,7 @@ import Profile from "../components/Profile";
 import SkillForm from "../components/Skills";
 import { useSelector } from "react-redux";
 import NavBar from "../components/Navbar";
+import ProjectContainer from "../components/ProjectContainer";
 
 function Dashboard() {
     const { user } = useSelector((state) => state.users);
@@ -17,6 +18,7 @@ function Dashboard() {
                 <Profile />
                 <ProgressBox />
                 <SkillForm />
+                <ProjectContainer/>
             </div>
             ;
         </div>

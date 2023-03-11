@@ -19,7 +19,6 @@ app.use("/details", detailsRoutes);
 
 app.get("/", async (req, res) => {
     const data = await pool.query("select * from users");
-    console.log(data.rows);
     res.json(data.rows);
 });
 

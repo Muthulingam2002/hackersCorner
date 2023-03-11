@@ -17,6 +17,14 @@ router.post("/fetch", async (req, res) => {
 router.post("/edit", async (req, res) => {
     const { id, leetcodeid, position, institution, description, skills } =
         req.body;
+    console.log("edit", {
+        id,
+        leetcodeid,
+        position,
+        institution,
+        description,
+        skills,
+    });
     try {
         const data = await pool.query(
             "update users set leetcodeid=$1,position=$3,institution=$4,description=$5,skills=$6 where id=$2 returning *",

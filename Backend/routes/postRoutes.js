@@ -3,7 +3,9 @@ const pool = require("../db.js");
 
 router.get("/fetchPost", async (req, res) => {
     try {
-        const data = await pool.query("select users.avatar,users.name,posts.id,posts.caption,posts.image,posts.isliked from posts join users on posts.user_id=users.id");
+        const data = await pool.query(
+            "select users.avatar,users.name,posts.id,posts.caption,posts.image,posts.isliked from posts join users on posts.user_id=users.id"
+        );
         res.json({
             data: data.rows,
         });
@@ -42,15 +44,15 @@ router.post("/alterLike", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
-    console.log("delete")
+    console.log("delete");
     const { id } = req.body;
-    console.log(id)
+    console.log(id);
     try {
         const data = await pool.query(
             "delete from posts where id=$1 returning *",
             [id]
         );
-        console.log(data.rows)
+        console.log(data.rows);
         res.json({
             data: data.rows,
         });

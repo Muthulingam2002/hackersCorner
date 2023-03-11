@@ -37,13 +37,10 @@ const InputBox = () => {
         console.log("uploading....");
         const upload = async () => {
             if (imageUrl) {
-                
                 const res = await axios.post(
                     `${process.env.REACT_APP_URL}posts/addPost`,
                     {
                         user_id: user.id,
-                        name: user.name,
-                        avatar: user.avatar,
                         image: imageUrl,
                         caption: Text,
                     }
@@ -129,15 +126,6 @@ const InputBox = () => {
                 <hr className="h-[3px] bg-[#6b717a] border-none rounded-full" />
 
                 <div className="Bottom flex justify-center p-1 sm:text-sm text-[10px] text-white">
-                    {/* <div className="A flex items-center cursor-pointer">
-                        <img
-                            className="hover:animate-pulse sm:h-[30px] h-[15px]"
-                            src="/Emoji/Facebook.png"
-                            alt=""
-                        />
-                        <p className="p-1">Live Camera</p>
-                    </div> */}
-
                     <div
                         onClick={() => {
                             Picker.current.click();
@@ -158,15 +146,6 @@ const InputBox = () => {
                             onChange={addImageToPost}
                         />
                     </div>
-
-                    {/* <div className="C flex items-center cursor-pointer">
-                        <img
-                            className="hover:animate-bounce sm:h-[30px] h-[15px]"
-                            src="/Emoji/Smile.png"
-                            alt=""
-                        />
-                        <p className="p-1">Activity</p>
-                    </div> */}
                 </div>
             </div>
         </>

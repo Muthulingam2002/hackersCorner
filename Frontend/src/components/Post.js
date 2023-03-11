@@ -1,79 +1,101 @@
-// import React from "react";
-// import {
-//     HeartIcon,
-//     PaperAirplaneIcon,
-//     ChatAltIcon,
-// } from "@heroicons/react/solid";
-// import Logo from "../assests/malware.png";
+import React, { useState } from "react";
+import {
+    HeartIcon,
+    PaperAirplaneIcon,
+    ChatAltIcon,
+    TrashIcon,
+} from "@heroicons/react/solid";
+import Logo from "../assests/malware.png";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-// const Post = () => {
-//     const name = "hacker";
-//     const time = "8:10";
-//     return (
-//         <div className="bg-[#1f2937] mt-2 sm:p-2 p-1 rounded-md text-gray-500">
-//             <div className=" flex justify-between items-center">
-//                 {/* <div className="Left flex items-center space-x-2"> */}
-//                     <div className=" bg-white  p-2  flex rounded-md w-full">
-//                         <img
-//                             className="rounded-full h-6  object-contain"
-//                             src={Logo}
-//                             alt=""
-//                         />
-//                         <p>Muthulingam</p>
-//                     </div>
-//                     {/* <div className="Name-Time text-[10px] sm:text-sm">
-//                         <p>{name}</p>
-//                         <p>
-//                             time
-//                             {new Date(
-//                                 +Info?.Time?.timestampValue?.seconds * 1000
-//                             ).toLocaleString()}
-//                         </p>
-//                     </div> */}
-//                 {/* </div> */}
-//                 <div className="Right">
-//                     {/* <DotsHorizontalIcon className="sm:h-6 h-4" /> */}
-//                 </div>
-//             </div>
-//             <hr className="mt-1 bg-slate-100" />
+function Post({ id, name, image, isLiked, caption, avatar }) {
+    const [liked, setliked] = useState(isLiked);
+    const { user } = useSelector((state) => state.users);
 
-//             <div className="bg-white rounded-md m-2">
-//                 <img
-//                     src={Logo}
-//                     className="h-[150px] w-[150px] mx-auto"
-//                     alt=""
-//                 />
-//             </div>
+    const handleLike = async () => {
+        try {
+            console.log("change befoer", liked);
+            const res = await axios.post(
+                `${process.env.REACT_APP_URL}posts/alterLike`,
+                {
+                    id: id,
+                    state: !liked,
+                }
+            );
+            setliked(res.data.data[0].isliked);
+            console.log("after", liked);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
-//             {/* <hr className="mt-1 bg-slate-100" />
+    const handlePostDelete = async (id) => {
+        try {
+            const data = await axios.post(
+                `${process.env.REACT_APP_URL}posts/delete`,
+                {
+                    id: id,
+                }
+            );
+            console.log(data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
-//             <div className="P-2 py-2">
-//                 <p className="text-xs sm:text-sm">{time}</p>
-//         </div> */}
+    return (
+        <>
+            <div class="overflow-hidden shadow-lg rounded-lg h-auto lg:w-80 md:w-80 w-full cursor-pointer m-auto bg-[#14253D] transition duration-500 ease-in-out transform ">
+                <div class="flex flex-wrap justify-between items-center p-2 border-b-2  bg-panel-700 ">
+                    <div className="h-12 w-12 p-1 bg-slate-200 rounded-full">
+                        <img
+                            class="text-xs w-full h-full rounded-full text-gray-600 "
+                            src={avatar}
+                        />
+                    </div>
 
-//             {/* {Info?.Image?.stringValue ? (
-//                 <div className="P-3">
-//                     <img
-//                         src={Logo}
-//                         className="h-[150px] w-[150px] mx-auto"
-//                         alt=""
-//                     />
-//                 </div>
-//             ) : (
-//                 ""
-//             )} */}
+                    <div class="text-xs mr-2 py-1.5 px-4 text-gray-600 bg-blue-200 rounded-2xl">
+                        {name}
+                    </div>
+                </div>
+                <div id="caption" className=" bg-[#081c3d] p-3 w-full h-full">
+                    <h1 className="text-white">{caption}</h1>
+                </div>
+                <img
+                    alt="blog photo"
+                    src={image}
+                    class="max-h-60 w-full object-cover"
+                />
 
-//             <hr className="mt-1" />
-//             <div className="P-4 flex items-center justify-between py-1">
-//                 <HeartIcon
-//                     className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out"
-//                     // onClick={like}
-//                 />
-//                 <PaperAirplaneIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />
-//                 <ChatAltIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />
-//             </div>
-//         </div>
-//     );
-// };
+                <div class="flex flex-wrap p-4 justify-starts items-center border-t-2 pt-5">
+                    <div className="P-4 flex w-full items-center justify-between py-1 text-white">
+                        {liked ? (
+                            <HeartIcon
+                                className="h-7  hover:scale-125 cursor-pointer transition-all duration-150 ease-out text-red-500"
+                                onClick={handleLike}
+                            />
+                        ) : (
+                            <HeartIcon
+                                className="h-7  hover:scale-125 cursor-pointer transition-all duration-150 ease-out"
+                                onClick={handleLike}
+                            />
+                        )}
+                        <PaperAirplaneIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />
 
-// export default Post;
+                        {user.name == name ? (
+                            <TrashIcon
+                                className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out"
+                                onClick={() => handlePostDelete(id)}
+                            />
+                        ) : (
+                            <ChatAltIcon className="h-7  hover:scale-125 cursor-pointer  transition-all duration-150 ease-out" />
+                        )}
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default Post;

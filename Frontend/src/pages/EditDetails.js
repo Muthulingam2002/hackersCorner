@@ -136,7 +136,7 @@ function EditDetails() {
         console.log(base64EncodedImage);
         try {
             const data = await axios.post(
-                `${process.env.REACT_APP_URL}details/`,
+                `${process.env.REACT_APP_URL}details/upload`,
                 {
                     id: user.id,
                     data: base64EncodedImage,
