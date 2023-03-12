@@ -1,5 +1,9 @@
-const router = require("express").Router();
-const pool = require("../db.js");
+import pool from "../db.js";
+import * as dotenv from "dotenv";
+import express from "express";
+
+const router = express.Router();
+dotenv.config();
 
 router.get("/fetchPost", async (req, res) => {
     try {
@@ -60,5 +64,4 @@ router.post("/delete", async (req, res) => {
         res.status(400).send(err);
     }
 });
-
-module.exports = router;
+export default router;

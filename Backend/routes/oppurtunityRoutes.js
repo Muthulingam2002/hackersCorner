@@ -1,5 +1,8 @@
-const router = require("express").Router();
-const axios =require('axios')
+import axios from "axios";
+import * as dotenv from "dotenv";
+import express from "express";
+const router = express.Router();
+dotenv.config();
 
 router.get("/jobs", async (req, res) => {
     try {
@@ -21,4 +24,4 @@ router.get("/hackathons", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

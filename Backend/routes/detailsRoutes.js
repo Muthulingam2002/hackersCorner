@@ -1,7 +1,9 @@
-const router = require("express").Router();
-const pool = require("../db.js");
-const dotenv = require("dotenv").config();
-const { cloudinary } = require("../utils/cloudinary.js");
+import * as dotenv from "dotenv";
+import express from "express";
+const router = express.Router();
+dotenv.config();
+import pool from "../db.js";
+import { cloudinary } from "../utils/cloudinary.js";
 
 router.post("/fetch", async (req, res) => {
     const { id } = req.body;
@@ -54,4 +56,4 @@ router.post("/upload", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

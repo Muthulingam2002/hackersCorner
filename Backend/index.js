@@ -1,13 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-const pool = require("./db");
-const userRoutes = require("./routes/userRoutes.js");
-const oppRoutes = require("./routes/oppurtunityRoutes.js");
-const postRoutes = require("./routes/postRoutes");
-const detailsRoutes = require("./routes/detailsRoutes");
+import express from "express";
+import cors from "cors";
+import axios from "axios";
+import pool from "./db.js";
+import oppRoutes from "./routes/oppurtunityRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+import detailsRoutes from "./routes/detailsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import fetch from "node-fetch";
 const app = express();
-const fetch = require("node-fetch");
 
 app.use(
     cors({
@@ -27,11 +27,9 @@ app.get("/", async (req, res) => {
     res.json(data.rows);
 });
 
-
-
 app.get("/leetcode/:user", async (req, res) => {
     const { user } = req.params;
-    console.log(user,"requested for leetcode")
+    console.log(user, "requested for leetcode");
     try {
         const response = await fetch("https://leetcode.com/graphql/", {
             credentials: "include",
@@ -60,12 +58,12 @@ app.get("/leetcode/:user", async (req, res) => {
         });
 
         const data = await response.json();
-        console.log("data",data)
+        console.log("data", data);
         const submissionDetail = {
             total: data.data.allQuestionsCount,
             userCount: data.data.matchedUser.submitStatsGlobal.acSubmissionNum,
         };
-        console.log(submissionDetail)
+        console.log(submissionDetail);
         res.json(submissionDetail);
     } catch (err) {
         res.status(404).json(`${user} not found ${err}`);
