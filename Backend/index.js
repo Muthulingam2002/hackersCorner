@@ -30,6 +30,7 @@ app.get("/", async (req, res) => {
 
 app.get("/leetcode/:user", async (req, res) => {
     const { user } = req.params;
+    console.log(user,"requested for leetcode")
     try {
         const response = await fetch("https://leetcode.com/graphql/", {
             credentials: "include",
@@ -58,13 +59,15 @@ app.get("/leetcode/:user", async (req, res) => {
         });
 
         const data = await response.json();
+        console.log("data",data)
         const submissionDetail = {
             total: data.data.allQuestionsCount,
             userCount: data.data.matchedUser.submitStatsGlobal.acSubmissionNum,
         };
+        console.log(submissionDetail)
         res.json(submissionDetail);
     } catch (err) {
-        res.status(404).json(`${user} not found`);
+        res.status(404).json(`${user} not found ${err}`);
     }
 });
 
