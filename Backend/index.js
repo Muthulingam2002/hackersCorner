@@ -7,6 +7,7 @@ const oppRoutes = require("./routes/oppurtunityRoutes.js");
 const postRoutes = require("./routes/postRoutes");
 const detailsRoutes = require("./routes/detailsRoutes");
 const app = express();
+const fetch = require("node-fetch");
 
 app.use(
     cors({
